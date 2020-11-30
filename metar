@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if [ "$#" != 2 ]
+then
+        echo 'Musia byt 2 argumenty napriklad takto: 26-10-1999'
+        exit 1
+fi
+SEARCH_ARG1=$(echo $1)
+DAY=${SEARCH_ARG1:0:2}
+MONTH=${SEARCH_ARG1:3:2}
+YEAR=${SEARCH_ARG1:6:4}
+SEARCH_ARG1=$(date -d $(echo $MONTH/$DAY/$YEAR) +'%s')
+SEARCH_ARG2=$(echo $2)
+SEARCH_ARG3=$(echo "$SEARCH_ARG1 + 24*60*60" | bc)
+URL='https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=csv&stationString='$SEARCH_ARG2'&startTime='$SEARCH_ARG1'&endTime='$SEARCH_ARG3''
+curl -s "$URL" | grep $SEARCH_ARG2
